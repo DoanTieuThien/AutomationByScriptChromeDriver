@@ -34,6 +34,9 @@
 	//Đóng trình duyệt sau khi thực hiện theo kịch bản
 	action.browser.close= TRUE | FALSE
 
+	//click tagnem theo Name
+	action.click.name=Tên Name của thẻ html
+
 2. Mục đích của demo
 - Demo này sẽ hình thành cung cấp cho các bạn basic khi muốn tương tác hay tạo ra các kịch bản sử dụng những action cơ bản được cung cấp.
 

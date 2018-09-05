@@ -101,6 +101,12 @@ namespace FormAutomationChromeByScript
                         scriptControlAction.actionSetByID(action);
                         invokeAppendText(this.txtLogAction, "Set element by id successfull\r\n");
                     }
+                    else if (action.StartsWith(ScriptMessage.ACTION_CLICK_NAME_PROP))
+                    {
+                        invokeAppendText(this.txtLogAction, "Click element by name \r\n");
+                        scriptControlAction.actionClickByName(action);
+                        invokeAppendText(this.txtLogAction, "Set element by name successfull\r\n");
+                    }
                 }
             }catch(Exception exp)
             {
@@ -208,6 +214,7 @@ namespace FormAutomationChromeByScript
         public static String ACTION_CLICK_ID_PROP = "action.click.id";
         public static String ACTION_CLICK_CLASS_PROP = "action.click.class";
         public static String ACTION_CLOSE_BROWSER_PROP = "action.browser.close";
+        public static String ACTION_CLICK_NAME_PROP = "action.click.name";
     }
 
     public class ScriptControlAction
@@ -347,7 +354,7 @@ namespace FormAutomationChromeByScript
             {
                 String[] arrayValue = keyMessage.Split('=');
                 String attribute = arrayValue[1].Trim();
-                String valueTemp = arrayValue[0].Replace(ScriptMessage.ACTION_SET_CLASS_PROP, "").Substring(1);
+                String valueTemp = arrayValue[0].Replace(ScriptMessage.ACTION_GET_CLASS_PROP, "").Substring(1);
                 String[] arrayValueTemp = valueTemp.Split('.');
                 String className = arrayValueTemp[0];
                 String position = arrayValueTemp[1];
@@ -359,6 +366,26 @@ namespace FormAutomationChromeByScript
                 MessageBox.Show(exp.Message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return dataAttribute;
+        }
+
+        public void actionClickByName(String keyMessage)
+        {
+            try
+            {
+                String[] arrayValue = keyMessage.Split('=');
+                String idTagName = arrayValue[1].Trim();
+
+                if ("".Equals(idTagName) && !arrayValue[0].Equals(ScriptMessage.ACTION_CLICK_ID_PROP))
+                {
+                    throw new Exception("ID can not be null in action Click element by ID of tagname");
+                }
+
+                clickElementByName(idTagName);
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show(exp.Message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private String getAttributeByClass(String className, String position, String attributeName)
@@ -416,6 +443,17 @@ namespace FormAutomationChromeByScript
         private void clickElementByID(String idTagName)
         {
             IWebElement element = this.driver.FindElementById(idTagName);
+
+            if (element != null)
+            {
+                element.Click();
+            }
+
+        }
+
+        private void clickElementByName(String idTagName)
+        {
+            IWebElement element = this.driver.FindElementByName(idTagName);
 
             if (element != null)
             {
